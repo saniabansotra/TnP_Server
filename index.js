@@ -8,6 +8,7 @@ app.use(express.json());
 
 app.post("/api/registration", async (req, res) => {
   try {
+    const count = await STUDENT_MODEL.find(JobID.find);
     const student = {
       Student_name: req.body.name,
       JobId: req.body.id,
@@ -34,24 +35,34 @@ app.get("/api/registration", async (req, res) => {
     return res.json({ success: false, error: error.message });
   }
 });
-
+//company can post at maximum of two jobs..............>
 app.post("/api/jobdescription", async (req, res) => {
   try {
-    const jobs = {
-      Company_name: req.body.name,
-      Job_role: req.body.role,
-      job_location: req.body.location,
-      Salary: req.body.salary,
-      Vacancy: req.body.vacancy,
-      Branch_eligibility: req.body.eligibility,
-      Min_CGPA: req.body.cgpa,
-      Deadline: req.body.deadlline,
-    };
-    const job1 = new JOB_MODEL(jobs);
-    await job1.save();
-    return res.json({ success: true, message: "Data Saved Successfully" });
+    let count = await JOB_MODEL.find({
+      CompanyName: req.body.Company_name,
+    }).countDocuments();
+    if (count < 2) {
+      const jobs = {
+        Company_name: req.body.name,
+        Job_role: req.body.role,
+        job_location: req.body.location,
+        Salary: req.body.salary,
+        Vacancy: req.body.vacancy,
+        Branch_eligibility: req.body.eligibility,
+        Min_CGPA: req.body.cgpa,
+        Deadline: req.body.deadlline,
+      };
+      const job1 = new JOB_MODEL(jobs);
+      await job1.save();
+      return res.json({ success: true, message: "Company is Verified" });
+    }
   } catch (error) {
-    return res.status(404).json({ success: false, error: error.message });
+    return res
+      .status(404)
+      .json({
+        success: false,
+        message: "Company cannot offer more than 2 jobs",
+      });
   }
 });
 app.get("/api/jobdescription", async (req, res) => {
@@ -62,9 +73,10 @@ app.get("/api/jobdescription", async (req, res) => {
     return res.json({ success: false, error: error.message });
   }
 });
-app.put("/api/updateby_tnp:id", async (req, res) => {
+//tnp can change job status of the student...............>
+app.put("/api/updateby_tnp/:id", async (req, res) => {
   try {
-    const data = await JOB_MODEL.findByIdAndUpdate(req.params.id, {
+    const data = await STUDENT_MODEL.findByIdAndUpdate(req.params.id, {
       Job_Status: "Shortlisted",
     });
     return res.status(200).json({ success: true });
@@ -72,9 +84,10 @@ app.put("/api/updateby_tnp:id", async (req, res) => {
     return res.json({ success: false, error: error.message });
   }
 });
-app.put("/api/updatejobdetails_by_tnp:Company_name", async (req, res) => {
+// changes in job details by tnp............>
+app.put("/api/updatejobdetails_by_tnp/:id", async (req, res) => {
   try {
-    const data = await JOB_MODEL.findByIdAndUpdate(req.params.Company_name, {
+    const data = await JOB_MODEL.findByIdAndUpdate(req.params.id, {
       Company_name: "Zeyfron",
       Job_role: "Backend Developer",
       job_location: "Germany",
@@ -87,6 +100,20 @@ app.put("/api/updatejobdetails_by_tnp:Company_name", async (req, res) => {
     return res.status(200).json({ success: true });
   } catch (error) {
     return res.json({ success: false, error: error.message });
+  }
+});
+///////////student can change their Registration Details if required....................>
+app.put("/api/update_by_student/:id", async (req, res) => {
+  try {
+    const data = await STUDENT_MODEL.findByIdAndUpdate(req.body.id, {
+      Student_phone_number: "89302987292",
+      Student_address: "Lucknow",
+    });
+    return res
+      .status(200)
+      .json({ success: true, message: "Updated Successfully" });
+  } catch (error) {
+    return res.status(200).json({ success: false, error: error.message });
   }
 });
 
