@@ -73,7 +73,7 @@ app.post("/api/registration", async (req, res) => {
       return res.json({ success: false, message: "already applied" });
     }
   } catch (error) {
-    return res.status(404).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 });
 // app.get("/api/registration", async (req, res) => {
@@ -90,7 +90,7 @@ app.put("/api/updateby_tnp/:id", async (req, res) => {
     const data = await STUDENT_MODEL.findByIdAndUpdate(req.params.id, {
       Job_Status: "Shortlisted",
     });
-    return res.status(200).json({ success: true });
+    return res.json({ success: true });
   } catch (error) {
     return res.json({ success: false, error: error.message });
   }
@@ -108,7 +108,7 @@ app.put("/api/updatejobdetails_by_tnp/:id", async (req, res) => {
       Min_CGPA: "7.5",
       Deadline: 30062023,
     });
-    return res.status(200).json({ success: true });
+    return res.json({ success: true });
   } catch (error) {
     return res.json({ success: false, error: error.message });
   }
@@ -120,11 +120,9 @@ app.put("/api/update_by_student/:id", async (req, res) => {
       Student_phone_number: "89302987292",
       Student_address: "Lucknow",
     });
-    return res
-      .status(200)
-      .json({ success: true, message: "Updated Successfully" });
+    return res.json({ success: true, message: "Updated Successfully" });
   } catch (error) {
-    return res.status(200).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 });
 ///////////////////student must be able to view all the job postings applied
@@ -137,7 +135,7 @@ app.post("/api/view_postings_by_students/:email/:id", async (req, res) => {
     return res.json({ success: true, data: postings });
   } catch (error) {
     console.log(error);
-    return res.status(403).json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 });
 
@@ -165,7 +163,7 @@ app.post("/api/postingsBy/:branch/:cgpa", async (req, res) => {
     return res.json({ success: true, data: postings });
   } catch (error) {
     console.log(error);
-    return res.status(403).json({ success: false, error: error.message });
+    return res.status.json({ success: false, error: error.message });
   }
 });
 // tnp can delete job postings if required.....................>
