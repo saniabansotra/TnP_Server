@@ -26,7 +26,7 @@ app.post("/api/jobdescription", async (req, res) => {
       const job1 = new JOB_MODEL(jobs);
       await job1.save();
       return res.json({ success: true, message: "Company is Verified" });
-    } else {
+    } else {~
       return res.json({
         success: false,
         message: "Cannot post more than two jobs",

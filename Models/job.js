@@ -5,7 +5,7 @@ const jobschema = new mongoose.Schema({
   job_location: String,
   Salary: Number,
   Vacancy: Number,
-  Branch_eligibility: String,
+  Branch_eligibility: Array,
   Min_CGP: Number,
   Deadline: Number,
 });
